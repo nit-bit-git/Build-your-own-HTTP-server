@@ -5,6 +5,7 @@ import (
 	"io"
 	"net"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -41,7 +42,11 @@ func handleConnection(conn net.Conn) {
 		return
 	}
 	fmt.Printf("Received request:\n%s\n", string(buffer[:n]))
-
+    
+	if !strings.HasPrefix(string(buffer),"GET / HTTP/1.1"){
+		conn.Write([]byte("HTTP/1.1 404 Not Found\r\n\r\n NOT FOUND ERROr"))
+		return
+	}
 	//send response
 
 	response := "HTTP/1.1 200 OK\r\nContent-Length: 12\r\n\r\nHelloWORLD!!"
